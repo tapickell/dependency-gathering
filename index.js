@@ -6,35 +6,35 @@ const depsCommand = `npm ls --parseable`
 
 function splitOnNewLine(string) {
   let dbgr = createDebugger(arguments.callee.name)
-  dbgr(string)
+  //dbgr(string)
   return string.split('\n')
 }
 
 function pathOfPackage(string) {
   // pass dependency chain with
   let dbgr = createDebugger(arguments.callee.name)
-  dbgr(string)
+  //dbgr(string)
   return path.join(string, "package.json")
 }
 
 function packageFor(string) {
   let dbgr = createDebugger(arguments.callee.name)
-  dbgr(string)
+  //dbgr(string)
   return require(string)
 }
 
 function keyFromPackage(key) {
   return object => {
     let dbgr = createDebugger(arguments.callee.name)
-    dbgr(JSON.stringify(object))
+    //dbgr(JSON.stringify(object))
 
-    return { packageName: object.name, keyValue: object[key] }
+    return { packageName: object.name, version: object.version, keyValue: object[key] }
   }
 }
 
 function tailOfPath(string) {
   let dbgr = createDebugger(arguments.callee.name)
-  dbgr(string)
+  //dbgr(string)
   return string.split('/').pop()
 }
 
@@ -48,7 +48,7 @@ function start(key, cb) {
 
   exec(depsCommand, (error, stdout, sterr) => {
     let depKeys = splitOnNewLine(stdout).slice(1).filter(removeEmptyStrings).map(pathOfPackage).map(packageFor).map(keyFromPackage(key))
-    dbgr(depKeys)
+    //dbgr(depKeys)
     cb(null, depKeys)
   })
 }
