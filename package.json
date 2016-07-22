@@ -7,9 +7,12 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Todd Pickell <todd@tap-software.com>",
-  "contributors": ["Ethan Garofolo <ethan@suchsoftware.com>"],
+  "contributors": [
+    "Ethan Garofolo <ethan@suchsoftware.com>"
+  ],
   "license": "MIT",
   "dependencies": {
-    "debug": "2.2.0"
+    "debug": "2.2.0",
+    "underscore": "1.8.3"
   }
 }

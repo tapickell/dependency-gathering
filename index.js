@@ -1,40 +1,29 @@
 const exec = require('child_process').exec
 const createDebugger = require('debug')
 const path = require('path')
+const _ = require('underscore')
 
 const depsCommand = `npm ls --parseable`
 
-function splitOnNewLine(string) {
-  let dbgr = createDebugger(arguments.callee.name)
-  //dbgr(string)
+function mapOutputToDepList(string) {
   return string.split('\n')
 }
 
 function pathOfPackage(string) {
-  // pass dependency chain with
-  let dbgr = createDebugger(arguments.callee.name)
-  //dbgr(string)
   return path.join(string, "package.json")
 }
 
 function packageFor(string) {
-  let dbgr = createDebugger(arguments.callee.name)
-  //dbgr(string)
   return require(string)
 }
 
-function keyFromPackage(key) {
+function keysFromPackage(keys) {
   return object => {
-    let dbgr = createDebugger(arguments.callee.name)
-    //dbgr(JSON.stringify(object))
-
-    return { packageName: object.name, version: object.version, keyValue: object[key] }
+    return _.pick(object, keys)
   }
 }
 
 function tailOfPath(string) {
-  let dbgr = createDebugger(arguments.callee.name)
-  //dbgr(string)
   return string.split('/').pop()
 }
 
@@ -42,13 +31,14 @@ function removeEmptyStrings(item) {
   return item !== ''
 }
 
-function start(key, cb) {
-  let dbgr = createDebugger(arguments.callee.name)
-  dbgr("In start function")
+Array.prototype.removeThisPackage = function() {
+  let t = Object(this)
+  return t.slice(1)
+}
 
+function start(keys, cb) {
   exec(depsCommand, (error, stdout, sterr) => {
-    let depKeys = splitOnNewLine(stdout).slice(1).filter(removeEmptyStrings).map(pathOfPackage).map(packageFor).map(keyFromPackage(key))
-    //dbgr(depKeys)
+    let depKeys = mapOutputToDepList(stdout).removeThisPackage().filter(removeEmptyStrings).map(pathOfPackage).map(packageFor).map(keysFromPackage(keys))
     cb(null, depKeys)
   })
 }
