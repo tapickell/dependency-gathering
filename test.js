@@ -8,13 +8,13 @@ const goodLics = [ "MIT"
                  , "BSD"
                  ]
 
-const whiteList = [ {packageName: "amqp-event-bus-connector", version: '1.0.2'}
-                  , {packageName: "tweetnacl", version: "0.14.3"}
+const whiteList = [ {name: "amqp-event-bus-connector", version: '1.0.2'}
+                  , {name: "tweetnacl", version: "0.14.3"}
                   ]
 
 function isLicenseBad(lic) {
   let dbgr = createDebugger(arguments.callee.name)
-  if (!lic.keyValue) {
+  if (!lic.license) {
     return false // did not specify license so public domain is assumed
   } else {
     try {
@@ -27,20 +27,20 @@ function isLicenseBad(lic) {
 
 function isBadByType(lic) {
   let isBad = false
-  switch (lic.keyValue.constructor()) {
+  switch (lic.license.constructor()) {
     case {}:
-      isBad = !goodLics.includes(lic.keyValue.type)
+      isBad = !goodLics.includes(lic.license.type)
       break;
     case []:
     case '':
-      isBad = !goodLics.some(goodLic => lic.keyValue.includes(goodLic))
+      isBad = !goodLics.some(goodLic => lic.license.includes(goodLic))
       break;
   }
   return isBad
 }
 
 function compareNameAndVersion(licA, licB) {
-  return licA.packageName === licB.packageName && licA.version === licB.version
+  return licA.name === licB.name && licA.version === licB.version
 }
 
 function notWhitelisted(lic) {
@@ -54,9 +54,9 @@ Array.prototype.countInChain = function() {
   return t
 }
 
-packagePlucker("license", (error, results) => {
+packagePlucker(["name", "version", "license"], (error, results) => {
   let dbgr = createDebugger('packagePlucker')
-  // dbgr(`RESULTS: Length: ${results.length} first: ${JSON.stringify(results[0])} last: ${JSON.stringify(results.pop())}`)
+  dbgr(`RESULTS: Length: ${results.length - 1} first: ${JSON.stringify(results[0])} last: ${JSON.stringify(results.pop())}`)
 
   let badLics = results.countInChain().filter(notWhitelisted).countInChain().filter(isLicenseBad).countInChain()
   if(badLics.length > 0) {
