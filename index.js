@@ -31,14 +31,9 @@ function removeEmptyStrings(item) {
   return item !== ''
 }
 
-Array.prototype.removeThisPackage = function() {
-  let t = Object(this)
-  return t.slice(1)
-}
-
 function start(keys, cb) {
   exec(depsCommand, (error, stdout, sterr) => {
-    let depKeys = mapOutputToDepList(stdout).removeThisPackage().filter(removeEmptyStrings).map(pathOfPackage).map(packageFor).map(keysFromPackage(keys))
+    let depKeys = _.chain(mapOutputToDepList(stdout)).tail().filter(removeEmptyStrings).map(pathOfPackage).map(packageFor).map(keysFromPackage(keys)).value()
     cb(null, depKeys)
   })
 }
