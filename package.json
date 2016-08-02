@@ -1,9 +1,11 @@
 {
-  "name": "dependency-gathering",
+  "name": "package-assertion",
   "version": "1.0.0",
   "description": "Gathers requirements from node modules and returns key",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
+    "compile": "babel --presets es2015-without-strict -d lib/ src/",
+    "prepublish": "npm run compile",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Todd Pickell <todd@tap-software.com>",
@@ -12,7 +14,13 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "debug": "2.2.0",
+    "bluebird": "3.4.1",
+    "path": "0.12.7",
     "underscore": "1.8.3"
+  },
+  "devDependencies": {
+    "babel-cli": "6.10.1",
+    "babel-core": "6.10.4",
+    "babel-preset-es2015-without-strict": "0.0.3"
   }
 }

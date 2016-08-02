@@ -1,5 +1,4 @@
 const exec = require('child_process').exec
-const createDebugger = require('debug')
 const path = require('path')
 const _ = require('underscore')
 
@@ -31,11 +30,22 @@ function removeEmptyStrings(item) {
   return item !== ''
 }
 
-function start(keys, cb) {
-  exec(depsCommand, (error, stdout, sterr) => {
-    let depKeys = _.chain(mapOutputToDepList(stdout)).tail().filter(removeEmptyStrings).map(pathOfPackage).map(packageFor).map(keysFromPackage(keys)).value()
-    cb(null, depKeys)
+function start(keys) {
+  return new Promise((resolve, reject) => {
+    exec(depsCommand, (error, stdout, sterr) => {
+      if (error) {
+        return reject(error)
+      }
+      let depKeys = _.chain(mapOutputToDepList(stdout))
+                    .tail()
+                    .filter(removeEmptyStrings)
+                    .map(pathOfPackage)
+                    .map(packageFor)
+                    .map(keysFromPackage(keys))
+                    .value()
+      resolve(depKeys)
+    })
   })
 }
 
-module.exports = start
+export default start
