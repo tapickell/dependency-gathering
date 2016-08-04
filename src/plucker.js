@@ -2,7 +2,7 @@ const exec = require('child_process').exec
 const path = require('path')
 const _ = require('underscore')
 
-const depsCommand = `npm ls --parseable`
+const depsCommand = `npm list -s --parseable --prod`
 
 function mapOutputToDepList(string) {
   return string.split('\n')
@@ -33,9 +33,6 @@ function removeEmptyStrings(item) {
 function start(keys) {
   return new Promise((resolve, reject) => {
     exec(depsCommand, (error, stdout, sterr) => {
-      if (error) {
-        return reject(error)
-      }
       let depKeys = _.chain(mapOutputToDepList(stdout))
                     .tail()
                     .filter(removeEmptyStrings)
