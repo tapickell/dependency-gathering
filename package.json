@@ -1,6 +1,6 @@
 {
   "name": "package-assertion",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Gathers requirements from node modules and returns key",
   "main": "lib/index.js",
   "scripts": {
