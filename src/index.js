@@ -56,7 +56,7 @@ function packageAssertion(depKeys, whiteList, goodLicenses) {
       .then(results => {
           return results
             .filter(notWhiteListed(whiteList))
-            .filter(isLicenseBad(goodLicenses))
+            //.filter(isLicenseBad(goodLicenses))
     })
   }
   return { asserter }
